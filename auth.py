@@ -3,6 +3,7 @@ import requests
 import hashlib
 from argparse import ArgumentParser
 import getpass
+import os
 
 
 login_url = "http://net.tsinghua.edu.cn/do_login.php"
@@ -12,12 +13,16 @@ user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1)" \
 
 
 def load_config(path="config/account.yaml"):
-    with open(path) as f:
-        config = yaml.load(f)
-        username = config["account"]["username"]
-        password = config["account"]["password"]
+    if os.path.exists(path):
+        with open(path) as f:
+            config = yaml.load(f)
+            username = config["account"]["username"]
+            password = config["account"]["password"]
 
-        return username, password
+    else:
+        username = input("username: ")
+        password = getpass.getpass()
+    return username, password
 
 
 def hex_md5_password(password):
@@ -34,11 +39,7 @@ def try_connections():
 
 
 def go_online():
-    '''
     username, password = load_config()
-    '''
-    username = input("username: ")
-    password = getpass.getpass()
     param = {
         "action": "login",
         "username": username,
