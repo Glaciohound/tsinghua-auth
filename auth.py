@@ -34,8 +34,11 @@ def try_connections():
 
 
 def go_online():
-    password = input("username: ")
-    username = getpass.getpass()
+    '''
+    username, password = load_config()
+    '''
+    username = input("username: ")
+    password = getpass.getpass()
     param = {
         "action": "login",
         "username": username,
@@ -49,9 +52,18 @@ def go_online():
         return True
 
 
+def check_online():
+    param = {
+        "action": "check_online",
+        "ac_id": 1
+    }
+    res = requests.post(login_url, param)
+    return res.text
+
+
 def go_offline():
     param = {
-        "action": "login",
+        "action": "logout",
         "ac_id": 1
     }
     res = requests.post(login_url, param)
@@ -65,13 +77,17 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("--connect", action='store_true')
     parser.add_argument("--disconnect", action='store_true')
+    parser.add_argument("--check", action='store_true')
     args = parser.parse_args()
 
     if args.connect:
         go_online()
-        print("Connecting. ping =", try_connections())
+        print(check_online())
     elif args.disconnect:
         go_offline()
-        print("Dis-connecting. ping =", try_connections())
+        print(check_online())
+    elif args.check:
+        print(check_online())
     else:
-        print("Please specify the action from `--connect` and `--disconnect`")
+        print("Please specify the action from `--connect`'\
+        ' `--check` and `--disconnect`")
