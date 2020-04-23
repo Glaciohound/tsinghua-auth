@@ -4,6 +4,7 @@ import hashlib
 from argparse import ArgumentParser
 import getpass
 import os
+import sys
 
 
 login_url = "http://net.tsinghua.edu.cn/do_login.php"
@@ -12,7 +13,9 @@ user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1)" \
     "54.0.2840.98 Safari/537.36"
 
 
-def load_config(path="config/account.yaml"):
+def load_config(path=os.path.join(
+        os.path.dirname( os.path.abspath(sys.argv[0])),
+        "config/account.yaml")):
     if os.path.exists(path):
         with open(path) as f:
             config = yaml.load(f)
